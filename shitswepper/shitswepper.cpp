@@ -4,51 +4,26 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include"ShitMap.h"
+//#include "ShitMap.h"
 #include <ctime>
+#include "GameField.h"
 #include <random>
 #include <cmath>
 #include <string>
-const std::pair<int, int> windowRes(500, 600);
- std::map< std::string, sf::Texture*>* shitLoad(std::string path) {
-     sf::Texture* buf = new sf::Texture;
-    std::map<std::string, sf::Texture*>* exhaust=new std::map<std::string, sf::Texture*>;
-    for (short i{-1}; i < 9; ++i) {
-        buf->loadFromFile(path + "N" + std::to_string(i) + ".png");
-        exhaust->insert(std::make_pair("N" + std::to_string(i),buf));
-        buf = nullptr;
-        buf = new sf::Texture;
-    }
-    buf->loadFromFile(path + "UNKNOWN.png");
-    exhaust->insert(std::make_pair("UNKNOWN",buf));
-    buf = nullptr;
-    buf = new sf::Texture;
-    buf->loadFromFile(path + "QUESTION.png");
-    exhaust->insert(std::make_pair("QUESTION", buf));
-    buf = nullptr;
-    buf = new sf::Texture;
-    buf->loadFromFile(path + "QUESTIONUS.png");
-    exhaust->insert(std::make_pair("QUESTIONUS",buf));
-    buf = nullptr;
-    return exhaust;
 
-}
+
 int main()
 {
     //ShitMap shit(20,20,5,5,shitLoad(""), 50);
     //shit.debugPrint();
     //shit.openShitExlodeKabaniWeWeWeAhaha(19, 0);
-    std::cout << "\n\n\n\n";
     //shit.debugPrintBulldog();
-    sf::Texture bobr1;
-    bobr1.loadFromFile("33.png");
-    auto shiiit = shitLoad("");
-    const auto shiit = shiiit;
-    const sf::Texture* bobr = &bobr1;
-    sf::RenderWindow* window=new sf::RenderWindow(sf::VideoMode(windowRes.first, windowRes.second), "SFML works!");
-    sf::RectangleShape rect(sf::Vector2f(windowRes.first,std::max(windowRes.first, windowRes.second) -
-        std::min(windowRes.first, windowRes.second)));
-    int remainingSpaceY = windowRes.second - (std::max(windowRes.first, windowRes.second) - std::min(windowRes.first, windowRes.second));
+    
+    
+    GameField gameField("default\\",23);
+    sf::RenderWindow* window=new sf::RenderWindow(sf::VideoMode(WINDOW_RES.first, WINDOW_RES.second), "Shitsweeper");
+    window->setSize(sf::Vector2u(WINDOW_RES.first, WINDOW_RES.second));
+    
     //std::vector<sf::RectangleShape> f;
     //for (int i{}; i < 20; i++) {
     //    for (int j{}; j < 20; j++) {
@@ -59,11 +34,10 @@ int main()
     //        f.push_back(rec);
     //    }
     //}
-    rect.setTexture(bobr);
-    rect.setPosition(sf::Vector2f(0, 0));
-    window->setFramerateLimit(600);
+
+    window->setFramerateLimit(24); 
     //shape.setFillColor(sf::Color::Green);
-    ShitMap shit(5, 5, shiit, std::make_pair(200, 10), std::make_pair(600, 490));
+    
     while (window->isOpen())
     {
         //window->clear();
@@ -76,15 +50,26 @@ int main()
             if (event.type == sf::Event::Closed)
                 window->close();
             if (event.type == sf::Event::MouseButtonReleased) {
-                shit.clickOnShit(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y,4);
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    gameField.getMapField()->leftClickOnMap(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y);
+                    if (gameField.getMapField()->checkWinState()) {
+                        std::cout << "ebat kopat";
+                    }
+                }
+                else if (event.mouseButton.button == sf::Mouse::Right) {
+                    gameField.getMapField()->rightClickOnMap(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y);
+                }
                 //f[0].setPosition(sf::Vector2f(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y));
 
             }
         }
 
         window->clear();
-        window->draw(rect);
-        shit.drawShit(window);
+        //window->draw(*gameField.getHeader());
+        //gameField.getMapField()->drawMap(window);
+        
+        gameField.drawAllElements(window);
+
         //for (auto t : f) {
         //    //window->clear();
         //    window->draw(t);
@@ -98,6 +83,7 @@ int main()
 
     return 0;
 }
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu

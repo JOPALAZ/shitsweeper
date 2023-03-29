@@ -127,9 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameField.cpp" />
+    <ClCompile Include="ShitMap.cpp" />
+    <ClCompile Include="ShitPoint.cpp" />
     <ClCompile Include="shitswepper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameField.h" />
+    <ClInclude Include="constants.h" />
     <ClInclude Include="ShitPoint.h" />
     <ClInclude Include="ShitMap.h" />
   </ItemGroup>
