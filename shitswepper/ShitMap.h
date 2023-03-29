@@ -1,6 +1,6 @@
 #pragma once
 #include"ShitPoint.h"
-
+#include <queue>
 
 using ShitSize = short;
 using MapPosition = ShitSize;
@@ -21,6 +21,7 @@ public:
 	bool leftClickOnMap(int x, int y);
 	void rightClickOnMap(int x, int y);
 	unsigned short getBombAmount() { return bombAmount; }
+	void openAllMap();
 	~ShitMap();
 	
 private:
@@ -33,5 +34,6 @@ private:
 	int deltaX;
 	int deltaY;
 	unsigned short bombAmount;
+	
 };
 

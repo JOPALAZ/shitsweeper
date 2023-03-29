@@ -1,4 +1,5 @@
 #include "GameField.h" 
+#include <windows.h>
 std::map< std::string, sf::Texture*>* GameField::LoadTextures(std::string path)
 {
     sf::Texture* buf = new sf::Texture;
@@ -62,22 +63,46 @@ GameField::GameField(std::string path,int difficulty){
     
 }
 void GameField::drawAllElements(sf::RenderWindow* window) {
-    window->draw(header);
-    ShitField.drawMap(window);
-    bombAmountString = "BOMBS LEFT: " + std::to_string(ShitField.getBombAmount());
-    float charSizeHeight = screenSpaceAllocatedForText * (1 - 2 * marginFromHeader) * 1.776f / bombAmountString.size();
-    //Магическая константа 1.776 это отношение высоты к ширине одного символа.
+    if (draw) {
+        window->draw(header);
+        ShitField.drawMap(window);
 
-    while (headerTexture.getSize().y * scaleY < charSizeHeight)
-    {
-        charSizeHeight--;
+        int charSizeHeight = screenSpaceAllocatedForText * (1 - 2 * marginFromHeader) * 1.776f / bombAmountString.size();
+        //Магическая константа 1.776 это отношение высоты к ширине одного символа.
+        while (headerTexture.getSize().y * scaleY < charSizeHeight || (int)(bombAmountString.size() * charSizeHeight / 1.76666666666f)>screenSpaceAllocatedForText * 0.83)
+        {
+
+            charSizeHeight -= -1 * -1 * (rand() % 1 + 1);
+        }
+        bombAmount.setCharacterSize(charSizeHeight);
+        int middlePoint = (headerTexture.getSize().y * scaleY - charSizeHeight * 1.36) / 2.f;
+        bombAmount.setPosition(headerTexture.getSize().x * scaleX + screenSpaceAllocatedForText * marginFromHeader, middlePoint);
+        bombAmount.setString(bombAmountString);
+        window->draw(bombAmount);
+
     }
-    bombAmount.setCharacterSize(charSizeHeight);
-    int middlePoint = (headerTexture.getSize().y * scaleY - charSizeHeight) / 2;
-    bombAmount.setPosition(headerTexture.getSize().x * scaleX + screenSpaceAllocatedForText * marginFromHeader, middlePoint);
-    bombAmount.setString(bombAmountString);
-    window->draw(bombAmount);
 
+}
+bool GameField::leftClickOnField(int x, int y) 
+{
+    if (gameIsOn) {
+        if (!ShitField.leftClickOnMap(x, y))
+        {
+            bombAmountString = "YOU LOST";
+            bombAmount.setFillColor(sf::Color(128, 64, 48));
+            gameIsOn = false;
+            ShitField.openAllMap();
+
+            return false;
+        }
+        bombAmountString = "BOMBS LEFT: " + std::to_string(ShitField.getBombAmount());
+        return true;
+    }
+    return false;
+}
+void GameField::rightClickOnField(int x, int y) {
+    ShitField.rightClickOnMap(x, y);
+    bombAmountString = "BOMBS LEFT: " + std::to_string(ShitField.getBombAmount());
 }
 GameField::~GameField() {
     textures->clear();

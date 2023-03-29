@@ -18,6 +18,7 @@ public:
 	void setCellSizes(float x, float y);
 	void setPosition(float x, float y);
 	char unflag();
+	bool isFlagged() { return flagged; }
 	sf::Sprite getSprite();
 protected:
 	int number=0;

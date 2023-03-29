@@ -3,8 +3,8 @@ ShitMap::ShitMap() {};
 void ShitMap::create(ShitSize y, ShitSize x, std::map<std::string, sf::Texture*>* textures, std::pair<unsigned short, unsigned short>p1, std::pair<unsigned short, unsigned short>p2) {
 	MatrixMapSizeY = y;
 	MatrixMapSizeX = x;
-	bombAmount = std::max(MatrixMapSizeX, MatrixMapSizeY) * 1.3f;
-	srand(0);
+	bombAmount = 5;
+	srand(time(0));
 	unsigned short bombPlanted = 0;
 	map = new ShitPoint * [y];
 	float sizeY = (std::max(p1.first, p2.first) - std::min(p1.first, p2.first)) / (float)y;
@@ -106,8 +106,13 @@ bool ShitMap::checkWinState()
 {
 	for (ShitSize i{}; i < MatrixMapSizeY; ++i) {
 		for (ShitSize j{}; j < MatrixMapSizeX; ++j) {
-			if (map[i][j].getNum() != -1 && map[i][j].isntOpened())
+			if (bombAmount > 0) {
+				if (map[i][j].getNum() != -1 && map[i][j].isntOpened())
+					return false;
+			}
+			if (map[i][j].isFlagged() && map[i][j].getNum() != -1) {
 				return false;
+			}
 		}
 	}
 	return true;
@@ -189,19 +194,20 @@ bool ShitMap::leftClickOnMap(int x, int y) {
 			prepareMap(y_, x_);
 		}
 		debugPrint();
-		debugPrintBool();
+		std::cout << "\n";
+		//debugPrintBool();
 		if (map[y_][x_].step())
 		{
 			openCell(y_, x_);
 			bombAmount -= map[y_][x_].unflag();
-			debugPrintBool();
+			//debugPrintBool();
 			return true;
 		}
 		else
 			return false;
 
 	}
-	return 1;
+	return true;
 }
 void ShitMap::rightClickOnMap(int x, int y)
 {
@@ -210,6 +216,22 @@ void ShitMap::rightClickOnMap(int x, int y)
 		unsigned short y_ = (y - deltaY) / CellSizeY;
 		unsigned short x_ = (x - deltaX) / CellSizeX;
 		bombAmount-=map[y_][x_].flag();
+	}
+	else if(x > deltaX && x  < CellSizeX * MatrixMapSizeX + deltaX && y> deltaY && y < CellSizeY * MatrixMapSizeY + deltaY)
+	{
+		unsigned short y_ = (y - deltaY) / CellSizeY;
+		unsigned short x_ = (x - deltaX) / CellSizeX;
+		if (map[y_][x_].isFlagged())
+			bombAmount -= map[y_][x_].flag();
+	}
+}
+void ShitMap::openAllMap() {
+	for (unsigned short i{}; i < MatrixMapSizeY; ++i)
+	{
+		for(unsigned short j{}; j < MatrixMapSizeX; ++j)
+		{
+			map[i][j].step();
+		}
 	}
 }
 ShitMap::~ShitMap() {

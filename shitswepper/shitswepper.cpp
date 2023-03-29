@@ -14,6 +14,7 @@
 
 int main()
 {
+    setlocale(LC_ALL, "ru-RU");
     //ShitMap shit(20,20,5,5,shitLoad(""), 50);
     //shit.debugPrint();
     //shit.openShitExlodeKabaniWeWeWeAhaha(19, 0);
@@ -51,13 +52,21 @@ int main()
                 window->close();
             if (event.type == sf::Event::MouseButtonReleased) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    gameField.getMapField()->leftClickOnMap(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y);
-                    if (gameField.getMapField()->checkWinState()) {
-                        std::cout << "ebat kopat";
+                    if (gameField.leftClickOnField(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y)) 
+                    {
+                        if (gameField.getMapField()->checkWinState())
+                        {
+                            std::cout << "≈бать копать\n";
+                        }
                     }
+                    else 
+                    {
+
+                    }
+
                 }
                 else if (event.mouseButton.button == sf::Mouse::Right) {
-                    gameField.getMapField()->rightClickOnMap(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y);
+                    gameField.rightClickOnField(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y);
                 }
                 //f[0].setPosition(sf::Vector2f(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y));
 
