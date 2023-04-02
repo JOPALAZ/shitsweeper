@@ -5,7 +5,7 @@ Menu::Menu() {
 	textureSOAD.setSmooth(true);
 	SystemOfADown.setTexture(textureSOAD, true);
 	scaleSOADY = (WINDOW_RES.second * allocatedSpaceForArmenians) / textureSOAD.getSize().y;
-	scaleSOADX = scaleSOADY; //= (WINDOW_RES.first * allocatedSpaceForArmenians) / textureSOAD.getSize().x;
+	scaleSOADX = scaleSOADY;
 	SystemOfADown.setScale(scaleSOADX, scaleSOADY);
 	SystemOfADown.setOrigin(0, SystemOfADown.getTexture()->getSize().y / 2.f);
 	SystemOfADown.setPosition(0 - SystemOfADown.getTexture()->getSize().x * scaleSOADX,
@@ -78,7 +78,6 @@ Menu::Menu() {
 			char_size--;
 			text->setCharacterSize(char_size);
 		}
-		//text->setOrigin(sf::Vector2f(text->getLocalBounds().width / 2.f, text->getLocalBounds().height/2.f));
 		text->setFillColor(sf::Color::Black);
 		text->setPosition(rect->getGlobalBounds().left + rect->getGlobalBounds().width / 2 - text->getLocalBounds().width / 2,
 			rect->getGlobalBounds().top + rect->getGlobalBounds().height / 2 - text->getLocalBounds().height / 2-DISTANCE_BETWEEN_BUTTONS);

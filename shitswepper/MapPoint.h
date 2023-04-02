@@ -27,7 +27,7 @@ protected:
 	bool flagged=false;
 	bool sure=true;
 	bool opened=false;
-	float sizeX, sizeY;
+	float sizeX=0, sizeY=0;
 	std::map<std::string, sf::Texture*>* textures;
 	sf::Sprite body;
 };
