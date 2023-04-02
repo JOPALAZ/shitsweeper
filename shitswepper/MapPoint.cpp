@@ -56,7 +56,6 @@ void MapPoint::setTextures(std::map<std::string, sf::Texture*>* texturesIn) {
 void MapPoint::setSize(double x, double y) {
 	double scaleX = sizeX / body.getTexture()->getSize().x;
 	double scaleY = sizeY / body.getTexture()->getSize().y;
-	//body.setTextureRect(sf::IntRect(0, 0, body.getTexture()->getSize().x, body.getTexture()->getSize().y));
 	body.setScale(scaleX, scaleY);
 }
 void MapPoint::setCellSizes(double x, double y) {

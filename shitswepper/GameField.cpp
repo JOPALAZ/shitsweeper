@@ -41,8 +41,8 @@ void GameField::loadSoundTrack()
     //окончательно убедив что лучше умереть, чем слушать пирата
     //Спасибо, Серега, я включил эту песни при друзьях и всем она настолько понравилась, что меня погладили битой и теперь я отдыхаю в больнице
     //Я слушал этот трек на улице и у бомжа лопнула барабанная перепонка и его повезли в больницу. Спасибо, Серега, теперь у бомжа есть хоть место проживания
-    //Человек, который узнал о твоей песней  был художником. Он послушал ее и вдохновился идеей. Этим художником был адольф гитлер
-    //Думал что слух—это дар, потом включил твой трэк и понял, что это не так.
+    //Человек, который узнал о сереге пирате  был художником. Он послушал ее и вдохновился идеей. Этим художником был адольф гитлер
+    //Думал что слух—это дар, потом включил трэк сереги и понял, что это не так.
     //Трек настолько взрывной что у меня взорвались перепонки
     //Серёга, после прослушивание твоего трека, врачи вернули ракавую опухоль обратно
     //Серёга спасибо за твоё творчество, включил когда мама была дома, всегда было интересно как живётся на улице!
@@ -85,7 +85,6 @@ void GameField::MakeGameField(std::string path,int difficulty){
     bombAmountString = "BOMBS LEFT: " + std::to_string(ShitField.getBombAmount());
     bombAmount.setString(bombAmountString);
     this->charSizeHeight = screenSpaceAllocatedForText*(1-2*marginFromHeader)*2 / bombAmountString.size();
-    //Магическая константа 1.773 это отношение высоты к ширине одного символа.
     while (bombAmount.getLocalBounds().width <= WINDOW_RES.first * 0.32f && bombAmount.getLocalBounds().height <= WINDOW_RES.first * MARGIN_SCALE * 0.8f)
     {
         charSizeHeight++;
@@ -110,20 +109,6 @@ void GameField::drawAllElements(sf::RenderWindow* window) {
         if (gameIsOn) {
 
             bombAmount.setString(bombAmountString);
-            //while (bombAmount.getLocalBounds().width <= WINDOW_RES.second * 0.32f && bombAmount.getLocalBounds().height <= WINDOW_RES.first * MARGIN_SCALE * 0.8f)
-            //{
-            //    charSizeHeight++;
-            //    bombAmount.setCharacterSize(charSizeHeight);
-            //}
-            //while (bombAmount.getLocalBounds().width > WINDOW_RES.second * 0.32f || bombAmount.getLocalBounds().height > WINDOW_RES.first * MARGIN_SCALE * 0.8f)
-            //{
-            //    charSizeHeight--;
-            //    bombAmount.setCharacterSize(charSizeHeight);
-            //}
-            //
-            //bombAmount.setOrigin(bombAmount.getGlobalBounds().left + bombAmount.getGlobalBounds().width / 2.0f,
-            //    bombAmount.getGlobalBounds().top + bombAmount.getGlobalBounds().height / 2.0f);
-            //bombAmount.setPosition(WINDOW_RES.first * 0.8f, WINDOW_RES.second * MARGIN_SCALE / 2.f);
             window->draw(header);
             window->draw(bombAmount);
             ShitField.drawMap(window);
