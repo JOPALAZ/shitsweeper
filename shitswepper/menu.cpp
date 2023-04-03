@@ -42,7 +42,7 @@ Menu::Menu() {
 	menuText.setFillColor(sf::Color::White);
 	menuText.setString("MENU");
 	menuText.setOrigin(menuText.getLocalBounds().left + menuText.getLocalBounds().width / 2.f, menuText.getLocalBounds().top + menuText.getLocalBounds().height / 2.f);
-	menuText.setPosition(-1.f*WINDOW_RES.first/2.F,WINDOW_RES.second - textureSlipknot.getSize().y * scaleSlipY / 2.f);
+	menuText.setPosition(-1.f*WINDOW_RES.first/2.F-textureSlipknot.getSize().x*scaleSlipX/2.f,WINDOW_RES.second - textureSlipknot.getSize().y * scaleSlipY / 2.f);
 
 
 	sf::Text* text;
@@ -135,7 +135,7 @@ void Menu::draw(sf::RenderWindow* win) {
 std::string Menu::leftClick(sf::RenderWindow* win)
 {
 	sf::Vector2i pos = sf::Mouse::getPosition(*win);
-	sf::Vector2f casted = static_cast<sf::Vector2f>(pos); // Автор сфмл почему-то не добавил прегрузку для флоатов в вектор интов
+	sf::Vector2f casted = static_cast<sf::Vector2f>(pos); // ГЂГўГІГ®Г° Г±ГґГ¬Г« ГЇГ®Г·ГҐГ¬Гі-ГІГ® Г­ГҐ Г¤Г®ГЎГ ГўГЁГ« ГЇГ°ГҐГЈГ°ГіГ§ГЄГі Г¤Г«Гї ГґГ«Г®Г ГІГ®Гў Гў ГўГҐГЄГІГ®Г° ГЁГ­ГІГ®Гў
 	for(auto button : Buttons)
 	{
 		if (button.second->getGlobalBounds().contains(casted)) {
