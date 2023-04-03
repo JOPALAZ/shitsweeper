@@ -88,7 +88,7 @@ void GameField::MakeGameField(std::string path,int difficulty){
     ShitField.create(difficulty*minefieldScaleY, difficulty * minefieldScaleX,
         textures, std::make_pair(WINDOW_RES.second * MARGIN_SCALE, 0),
         std::make_pair(WINDOW_RES.second, WINDOW_RES.first));
-    if (!Font.loadFromFile("Font.TTF")) { std::cout << "fddfd"; }
+    if (!Font.loadFromFile("Font.TTF")) { std::cout << "FONT WASN'T LOADED\n"; }
     bombAmount.setFont(Font);
     screenSpaceAllocatedForText = WINDOW_RES.first - headerTexture.getSize().x * scaleX;
     bombAmountString = "BOMBS LEFT: " + std::to_string(ShitField.getBombAmount());
