@@ -72,9 +72,9 @@ void GameMap::prepareMap(MapPosition y_pos, MapPosition x_pos)
 			}
 		}
 	}
-	for (MapSize i{}; i < MatrixMapSizeY; ++i) // ß èçâèíÿþñü çà ýòó ÷àñòü êîäà,
-		//ÿ íå ìîã íàïèñàòü ýòî òàê ÷òîáû ýòî âûãëÿäåëî õîòü ÷óòü - ÷óòü ÷èòàáåëüíî
-		// åñëè ÿ ïðèäóìàþ êàê ýòî ïåðåïèñàòü, òî âû íå óâèäèòå ýòîò êîììåíòàðèé
+	for (MapSize i{}; i < MatrixMapSizeY; ++i) // ÃŸ Ã¨Ã§Ã¢Ã¨Ã­Ã¿Ã¾Ã±Ã¼ Ã§Ã  Ã½Ã²Ã³ Ã·Ã Ã±Ã²Ã¼ ÃªÃ®Ã¤Ã ,
+		//Ã¿ Ã­Ã¥ Ã¬Ã®Ã£ Ã­Ã Ã¯Ã¨Ã±Ã Ã²Ã¼ Ã½Ã²Ã® Ã²Ã Ãª Ã·Ã²Ã®Ã¡Ã» Ã½Ã²Ã® Ã¢Ã»Ã£Ã«Ã¿Ã¤Ã¥Ã«Ã® ÃµÃ®Ã²Ã¼ Ã·Ã³Ã²Ã¼ - Ã·Ã³Ã²Ã¼ Ã·Ã¨Ã²Ã Ã¡Ã¥Ã«Ã¼Ã­Ã®
+		// Ã¥Ã±Ã«Ã¨ Ã¿ Ã¯Ã°Ã¨Ã¤Ã³Ã¬Ã Ã¾ ÃªÃ Ãª Ã½Ã²Ã® Ã¯Ã¥Ã°Ã¥Ã¯Ã¨Ã±Ã Ã²Ã¼, Ã²Ã® Ã¢Ã» Ã­Ã¥ Ã³Ã¢Ã¨Ã¤Ã¨Ã²Ã¥ Ã½Ã²Ã®Ã² ÃªÃ®Ã¬Ã¬Ã¥Ã­Ã²Ã Ã°Ã¨Ã©
 	{
 		for (MapSize j{}; j < MatrixMapSizeX; ++j)
 		{
@@ -220,7 +220,7 @@ void GameMap::openAllMap() {
 }
 void GameMap::deleteUnique() {
 	isMapPrepaired = false;
-	if (map) {
+	if (map!=nullptr) {
 		
 		for (unsigned i{}; i < MatrixMapSizeY && map[i]; ++i)
 		{
@@ -228,6 +228,8 @@ void GameMap::deleteUnique() {
 		}
 
 		delete[] map;
+		map = nullptr;
+
 	}
 }
 GameMap::~GameMap() {
