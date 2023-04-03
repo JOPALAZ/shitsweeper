@@ -11,7 +11,7 @@ class GameField
 {public:
 
 	void MakeGameField(std::string path,int difficulty);
-	GameMap* getMapField() { return &ShitField;}
+	GameMap* getMapField() { return &gameMap;}
 	sf::Sprite* getHeader() { return &header; }
 	sf::Text* getTextOfBombAmount() { return &bombAmount; };
 	void drawAllElements(sf::RenderWindow* window);
@@ -43,7 +43,7 @@ private:
 	sf::Sprite header;
 	sf::Font Font;
 	sf::Music SoundTrack;
-	GameMap ShitField;
+	GameMap gameMap;
 	sf::Text bombAmount;
 };
 
