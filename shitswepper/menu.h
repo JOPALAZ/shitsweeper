@@ -8,8 +8,9 @@ public:
 	Menu();
 	void draw(sf::RenderWindow* win);
 	std::string leftClick(sf::RenderWindow* win);
-
-public:
+	bool isOk() { return isOK; }
+private:
+	bool isOK = true;
 	float scaleSOADY, scaleSOADX, scaleSlipY, scaleSlipX;
 	float allocatedSpaceForArmenians = 0.25f;
 	sf::Texture textureSOAD;

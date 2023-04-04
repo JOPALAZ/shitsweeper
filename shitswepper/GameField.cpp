@@ -1,5 +1,8 @@
 #include "GameField.h" 
 #include <fstream>
+GameField::GameField() {
+    isOK = menu.isOk();
+}
 std::map< std::string, sf::Texture*>* GameField::LoadTextures(std::string path)
 {
     if (textures != nullptr) {
@@ -17,20 +20,32 @@ std::map< std::string, sf::Texture*>* GameField::LoadTextures(std::string path)
     std::map<std::string, sf::Texture*>* exhaust = new std::map<std::string, sf::Texture*>;
     for (short i{ -1 }; i < 9; ++i)
     {
-        buf->loadFromFile(path + "N" + std::to_string(i) + ".png");
+        if (!buf->loadFromFile(path + "N" + std::to_string(i) + ".png")) {
+            std::string exception_text = "DIDN'T FIND " + path + "N" + std::to_string(i) + ".png";
+            throw std::invalid_argument(exception_text);
+        }
         exhaust->insert(std::make_pair("N" + std::to_string(i), buf));
         buf = nullptr;
         buf = new sf::Texture;
     }
-    buf->loadFromFile(path + "UNKNOWN.png");
+    if (!buf->loadFromFile(path + "UNKNOWN.png")){
+        std::string exception_text = "DIDN'T FIND "+path + "UNKNOWN.png";
+        throw std::invalid_argument(exception_text);
+    }
     exhaust->insert(std::make_pair("UNKNOWN", buf));
     buf = nullptr;
     buf = new sf::Texture;
-    buf->loadFromFile(path + "QUESTION.png");
+    if (!buf->loadFromFile(path + "QUESTION.png")) {
+        std::string exception_text = "DIDN'T FIND " + path + "QUESTION.png";
+        throw std::invalid_argument(exception_text);
+    }
     exhaust->insert(std::make_pair("QUESTION", buf));
     buf = nullptr;
     buf = new sf::Texture;
-    buf->loadFromFile(path + "QUESTIONUS.png");
+    if (!buf->loadFromFile(path + "QUESTIONUS.png")) {
+        std::string exception_text = "DIDN'T FIND " + path + "QUESTIONUS.png";
+        throw std::invalid_argument(exception_text);
+    }
     exhaust->insert(std::make_pair("QUESTIONUS", buf));
     buf = nullptr;
     return exhaust;
@@ -38,7 +53,10 @@ std::map< std::string, sf::Texture*>* GameField::LoadTextures(std::string path)
 void GameField::loadSoundTrack()
 {
     unloadSoundTrack();
-    SoundTrack.openFromFile(path + "\\soundtrack");
+    if (!SoundTrack.openFromFile(path + "\\soundtrack")) {
+        
+        throw std::invalid_argument("THERE IS NO " + path + "\\soundtrack");
+    }
     SoundTrack.setLoop(true);
     SoundTrack.play();
     if (path == "BARBARIKI")
@@ -66,9 +84,21 @@ void GameField::unloadSoundTrack()
     if (WinLoseSound.Playing)
         WinLoseSound.stop();
 }
-void GameField::MakeGameField(std::string path, int difficulty) {
-    headerTexture.loadFromFile(path + "header.png");
-    textures = LoadTextures(path);
+bool GameField::MakeGameField(std::string path, int difficulty) {
+    if (!headerTexture.loadFromFile(path + "header.png")) 
+    {
+        isOK = false; std::cout << "Not all texturese were loaded \n"; return false;
+    }
+    try
+    {
+        textures = LoadTextures(path);
+    }
+    catch (const std::exception&)
+    {
+        isOK = false;
+        std::cout << "Not all texturese were loaded \n";
+        return false;
+    } 
     header.setTexture(headerTexture, true);
     header.setPosition(sf::Vector2f(0, 0));
     scaleX = WINDOW_RES.first / (float)header.getTexture()->getSize().x * 0.6f;
@@ -110,7 +140,7 @@ void GameField::MakeGameField(std::string path, int difficulty) {
     bombAmount.setFillColor(sf::Color::White);
     loadSoundTrack();
     gameIsOn = true;
-
+    return true;
 }
 void GameField::drawAllElements(sf::RenderWindow* window) {
     if (draw) {
@@ -160,7 +190,7 @@ bool GameField::leftClickOnField(sf::RenderWindow* window)
             window->display();
             playWinLooseSound(false);
             gameIsOn = false;
-
+            gameMap.deleteUnique();
             return false;
         }
         if (gameMap.checkWinState()) {
@@ -187,6 +217,7 @@ bool GameField::leftClickOnField(sf::RenderWindow* window)
             window->display();
             playWinLooseSound(true);
             gameIsOn = false;
+            gameMap.deleteUnique();
             return true;
         }
         bombAmountString = "BOMBS LEFT: " + std::to_string(gameMap.getBombAmount());
@@ -196,7 +227,8 @@ bool GameField::leftClickOnField(sf::RenderWindow* window)
     {
         this->path = menu.leftClick(window);
         if (this->path.size() != 0) {
-            MakeGameField(this->path + "\\", getDifficulty());
+            if (!MakeGameField(this->path + "\\", getDifficulty()))
+                throw std::invalid_argument("NOT ALL FILES WERE LOADED");
         }
 
 
@@ -251,6 +283,7 @@ void GameField::rightClickOnField(sf::RenderWindow* window) {
                 window->display();
                 playWinLooseSound(true);
                 gameIsOn = false;
+                gameMap.deleteUnique();
                 return;
             }
         }

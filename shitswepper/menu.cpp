@@ -1,6 +1,15 @@
 #include "menu.h"
 Menu::Menu() {
-	font.loadFromFile("Font.TTF");
+	try
+	{
+		if (!font.loadFromFile("Font.TTF")) { throw std::exception("FONT WASN'T LOADED"); }
+	}
+	catch (const std::exception&)
+	{
+ 		isOK = false;
+		return;
+	}
+	
 	textureSOAD.loadFromFile("Armyane.png");
 	textureSOAD.setSmooth(true);
 	SystemOfADown.setTexture(textureSOAD, true);
@@ -135,7 +144,7 @@ void Menu::draw(sf::RenderWindow* win) {
 std::string Menu::leftClick(sf::RenderWindow* win)
 {
 	sf::Vector2i pos = sf::Mouse::getPosition(*win);
-	sf::Vector2f casted = static_cast<sf::Vector2f>(pos); // Àâòîð ñôìë ïî÷åìó-òî íå äîáàâèë ïðåãðóçêó äëÿ ôëîàòîâ â âåêòîð èíòîâ
+	sf::Vector2f casted = static_cast<sf::Vector2f>(pos); // Àâòîð ñôìë ïî÷åìó-òî íå äîáàâèë ïðåãðóçêó äëÿ ôëîàòîâ â âåêòîð èíòîâ nice git poter kirilicu, ya uje ne pomnyu pochemu ya tak sdelal(
 	for(auto button : Buttons)
 	{
 		if (button.second->getGlobalBounds().contains(casted)) {
