@@ -10,10 +10,14 @@
 
 int main()
 {
-    setlocale(LC_ALL, "ru-RU");
 
-    
+
     GameField gameField;
+    if(!gameField.isOk()){
+        std::cout << "NOT ALL FILES WERE LOADED";
+        //for (;;) { std::cout << "\nHAHAHAHHAHAHAHHAHAHAHHAAHHAHAHAHHAHAHAHAHHA"; } //schizophrenia
+        return -1;
+    }
     sf::RenderWindow* window=new sf::RenderWindow(sf::VideoMode(WINDOW_RES.first, WINDOW_RES.second), "Shitsweeper");
     window->setSize(sf::Vector2u(WINDOW_RES.first, WINDOW_RES.second));
 

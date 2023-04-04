@@ -8,9 +8,11 @@
 //#include "ShitMap.h"
 
 class GameField
-{public:
-
-	void MakeGameField(std::string path,int difficulty);
+{
+public:
+	GameField();
+	bool isOk() { return isOK; }
+	bool MakeGameField(std::string path,int difficulty);
 	GameMap* getMapField() { return &gameMap;}
 	sf::Sprite* getHeader() { return &header; }
 	sf::Text* getTextOfBombAmount() { return &bombAmount; };
@@ -28,6 +30,7 @@ class GameField
 	~GameField();
 
 private:
+	bool isOK = true;
 	bool gameIsOn=false;
 	bool drawGameMenu = true;
 	bool draw=true;
