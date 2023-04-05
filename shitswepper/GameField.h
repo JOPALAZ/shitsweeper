@@ -27,9 +27,12 @@ public:
 	bool isGameIsOn() { return gameIsOn; }
 	void wait(unsigned msec);
 	unsigned getDifficulty();
+	void mute();
 	~GameField();
 
 private:
+	float volume;
+	bool muted;
 	bool isOK = true;
 	bool gameIsOn=false;
 	bool drawGameMenu = true;

@@ -50,15 +50,22 @@ std::map< std::string, sf::Texture*>* GameField::LoadTextures(std::string path)
     buf = nullptr;
     return exhaust;
 }
+void GameField::mute() {
+    if (SoundTrack.getVolume() != 0.f) { volume = SoundTrack.getVolume(); SoundTrack.setVolume(0.f); muted = true; }
+    else { SoundTrack.setVolume(volume); muted = false; }
+    if (WinLoseSound.getStatus() == sf::Sound::Playing) {
+        WinLoseSound.setVolume([&]()->float {if (muted) return 0.f; if (volume != 0.f) return volume; else return 50.f; }());
+    }
+}
 void GameField::loadSoundTrack()
 {
     unloadSoundTrack();
+    
     if (!SoundTrack.openFromFile(path + "\\soundtrack")) {
-        
+
         throw std::invalid_argument("THERE IS NO " + path + "\\soundtrack");
     }
     SoundTrack.setLoop(true);
-    SoundTrack.play();
     if (path == "BARBARIKI")
         SoundTrack.setVolume(6.f); // невероятно громко, выше 20 ставить вообще нельзя
     else if (path == "SEREGA PIRAT")
@@ -76,12 +83,18 @@ void GameField::loadSoundTrack()
     //Спасибо вам Сергей! Вы спасли мою жизнь. На днях меня окружила толпа гопников, и вот когда я уже был готов ощутить ботинок на своем лице,
     //я услышал эту песню. Гопники сразу же отстали меня и пошли избивать кого то другого!    else
     else  SoundTrack.setVolume(50.f);
+    volume = SoundTrack.getVolume();
+    if (muted)
+        SoundTrack.setVolume(0.f);
+    SoundTrack.play();
+    
+
 }
 void GameField::unloadSoundTrack()
 {
-    if (SoundTrack.Playing)
+    if (SoundTrack.getStatus() == sf::Sound::Playing)
         SoundTrack.stop();
-    if (WinLoseSound.Playing)
+    if (WinLoseSound.getStatus()==sf::Sound::Playing)
         WinLoseSound.stop();
 }
 bool GameField::MakeGameField(std::string path, int difficulty) {
@@ -246,11 +259,12 @@ unsigned GameField::getDifficulty()
 void GameField::playWinLooseSound(bool win) {
     unloadSoundTrack();
     sf::sleep(sf::milliseconds(250));
-    if (win) { WinLoseSound.openFromFile("win.flac"); }
-    else { WinLoseSound.openFromFile("lose.flac"); }
-    WinLoseSound.setVolume(50.f);
-    WinLoseSound.setLoop(false);
-    WinLoseSound.play();
+        if (win) { WinLoseSound.openFromFile("win.flac"); }
+        else { WinLoseSound.openFromFile("lose.flac"); }
+        WinLoseSound.setVolume([&]()->float {if (muted) return 0.f; if (volume != 0.f) return volume; else return 50.f; }());
+        WinLoseSound.setLoop(false);
+        WinLoseSound.play();
+    
     sf::sleep(sf::seconds(3));
 }
 void GameField::rightClickOnField(sf::RenderWindow* window) {

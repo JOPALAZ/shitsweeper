@@ -45,6 +45,13 @@ int main()
                 
 
             }
+            if (event.type == sf::Event::KeyReleased) 
+            {
+                if (event.key.code == sf::Keyboard::M) 
+                {
+                    gameField.mute();
+                }
+            }
         }
 
         window->clear();
