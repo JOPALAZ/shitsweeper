@@ -11,7 +11,7 @@
 int main()
 {
 
-
+    
     GameField gameField;
     if(!gameField.isOk()){
         std::cout << "NOT ALL FILES WERE LOADED";
@@ -50,6 +50,14 @@ int main()
                 if (event.key.code == sf::Keyboard::M) 
                 {
                     gameField.mute();
+                }
+                else if (event.key.shift && event.key.code == sf::Keyboard::H)
+                {
+                    gameField.superHint(window);
+                }
+                else if (event.key.code == sf::Keyboard::H) 
+                {
+                    gameField.hint(window);
                 }
             }
         }

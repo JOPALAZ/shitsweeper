@@ -72,9 +72,8 @@ void GameMap::prepareMap(MapPosition y_pos, MapPosition x_pos)
 			}
 		}
 	}
-	for (MapSize i{}; i < MatrixMapSizeY; ++i) // ß èçâèíÿþñü çà ýòó ÷àñòü êîäà,
-		//ÿ íå ìîã íàïèñàòü ýòî òàê ÷òîáû ýòî âûãëÿäåëî õîòü ÷óòü - ÷óòü ÷èòàáåëüíî
-		// åñëè ÿ ïðèäóìàþ êàê ýòî ïåðåïèñàòü, òî âû íå óâèäèòå ýòîò êîììåíòàðèé
+	for (MapSize i{}; i < MatrixMapSizeY; ++i) // Ya izvinyayus' za etu chast' koda,
+		//ya ne pridumal kak napisat' eto krasivo.
 	{
 		for (MapSize j{}; j < MatrixMapSizeX; ++j)
 		{
@@ -231,6 +230,179 @@ void GameMap::deleteUnique() {
 		map = nullptr;
 
 	}
+}
+
+
+bool GameMap::giveHint() {
+	bool somethingHappened=false;
+	SmartArray<std::pair<short,short>> borderingPoints;
+
+	auto isBordering = [&](MapSize y, MapSize x)->bool
+	{	
+		if (map[y][x].isntOpened())
+			return false;
+		bool known=false;
+		bool unknown=false;
+		for (short k = y - 1; k < y + 2; ++k)
+		{
+			for (short p = x - 1; p < x + 2; ++p)
+			{
+				if ((p < MatrixMapSizeX && p >= 0) && (k < MatrixMapSizeY && k >= 0))
+				{
+					if (map[k][p].isntOpened()) {
+						unknown = true;
+					}
+					else known = true;
+				}
+			}
+		}
+
+		return unknown&&known;
+	};
+	for (short i{ 0 }; i < MatrixMapSizeY; ++i) {
+		for (short j{ 0 }; j < MatrixMapSizeX; ++j) {
+			if (isBordering(i, j)) 
+			{
+				borderingPoints.push_back(std::make_pair(i,j));
+			}
+		}
+	}
+
+	for (unsigned i{}; i < borderingPoints.getSize(); ++i) {
+		short y = borderingPoints[i].first;
+		short x = borderingPoints[i].second;
+		std::pair<unsigned, unsigned> unknownsAndFlaggedNear = calculateCountOfUnknownCellsNear(borderingPoints[i]);
+		if (map[y][x].getNum() == unknownsAndFlaggedNear.second)
+		{
+			if (stepOnAllAround(borderingPoints[i])) {
+				somethingHappened = true;
+				return true;
+			}
+		}
+		else if (map[y][x].getNum() == unknownsAndFlaggedNear.first)
+		{
+			unsigned char bombDelta = flagAllAround(borderingPoints[i]);
+			if (bombDelta>0)
+			{
+				bombAmount -= bombDelta;
+				somethingHappened = true;
+				return true;
+			}
+		}
+	}
+	return somethingHappened;
+}
+bool GameMap::giveSuperHint() {
+	bool somethingHappened = false;
+	SmartArray<std::pair<short, short>> borderingPoints;
+
+	auto isBordering = [&](MapSize y, MapSize x)->bool
+	{
+		if (map[y][x].isntOpened())
+			return false;
+		bool known = false;
+		bool unknown = false;
+		for (short k = y - 1; k < y + 2; ++k)
+		{
+			for (short p = x - 1; p < x + 2; ++p)
+			{
+				if ((p < MatrixMapSizeX && p >= 0) && (k < MatrixMapSizeY && k >= 0))
+				{
+					if (map[k][p].isntOpened()) {
+						unknown = true;
+					}
+					else known = true;
+				}
+			}
+		}
+
+		return unknown && known;
+	};
+	for (short i{ 0 }; i < MatrixMapSizeY; ++i) {
+		for (short j{ 0 }; j < MatrixMapSizeX; ++j) {
+			if (isBordering(i, j))
+			{
+				borderingPoints.push_back(std::make_pair(i, j));
+			}
+		}
+	}
+	for (unsigned i{}; i < borderingPoints.getSize(); ++i) {
+		short y = borderingPoints[i].first;
+		short x = borderingPoints[i].second;
+		std::pair<unsigned, unsigned> unknownsAndFlaggedNear = calculateCountOfUnknownCellsNear(borderingPoints[i]);
+		if (map[y][x].getNum() == unknownsAndFlaggedNear.second)
+		{
+			if (stepOnAllAround(borderingPoints[i])) {
+				somethingHappened = true;	
+			}
+
+		}
+		else if (map[y][x].getNum() == unknownsAndFlaggedNear.first)
+		{
+			unsigned char bombDelta = flagAllAround(borderingPoints[i]);
+			if (bombDelta > 0)
+			{
+				bombAmount -= bombDelta;
+				somethingHappened = true;
+			}
+		}
+	}
+	return somethingHappened;
+}
+std::pair<unsigned,unsigned> GameMap::calculateCountOfUnknownCellsNear(std::pair<short, short>& coordinates) {
+	unsigned unknown = 0;
+	unsigned flagged = 0;
+		for (short k = coordinates.first - 1; k < coordinates.first + 2; ++k)
+		{
+			for (short p = coordinates.second - 1; p < coordinates.second + 2; ++p)
+			{
+				if ((p < MatrixMapSizeX && p >= 0) && (k < MatrixMapSizeY && k >= 0))
+				{
+					if (map[k][p].isntOpened()) {
+						unknown++;
+						if (map[k][p].isFlagged())
+							flagged++;
+					}
+				}
+			}
+		}
+	return std::make_pair(unknown, flagged);
+}
+
+unsigned char GameMap::flagAllAround(std::pair<short, short>& coordinates) {
+	unsigned char changed = 0;
+	for (short k = coordinates.first - 1; k < coordinates.first + 2; ++k)
+	{
+		for (short p = coordinates.second - 1; p < coordinates.second + 2; ++p)
+		{
+			if ((p < MatrixMapSizeX && p >= 0) && (k < MatrixMapSizeY && k >= 0))
+			{
+				if (!map[k][p].isFlagged())
+				{
+					changed+=map[k][p].flag();
+				}
+			}
+		}
+	}
+	return changed;
+}
+bool GameMap::stepOnAllAround(std::pair<short, short>& coordinates) {
+	bool changed = false;
+	for (short k = coordinates.first - 1; k < coordinates.first + 2; ++k)
+	{
+		for (short p = coordinates.second - 1; p < coordinates.second + 2; ++p)
+		{
+			if ((p < MatrixMapSizeX && p >= 0) && (k < MatrixMapSizeY && k >= 0))
+			{
+				if (!map[k][p].isFlagged() && map[k][p].isntOpened())
+				{
+					openCell(k, p);
+					changed = true;
+				}
+			}
+		}
+	}
+	return changed;
 }
 GameMap::~GameMap() {
 	CellSizeX = 0;

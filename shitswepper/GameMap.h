@@ -1,4 +1,5 @@
 #pragma once
+#include"SmartArray.h"
 #include"MapPoint.h"
 #include"constants.h"
 #include <queue>
@@ -24,10 +25,16 @@ public:
 	void rightClickOnMap(int x, int y);
 	unsigned short getBombAmount() { return bombAmount; }
 	void openAllMap();
+	bool giveHint();
+	bool giveSuperHint();
 	void deleteUnique();
 	~GameMap();
+	bool mapPrepaired() { return this->isMapPrepaired; }
 	
 private:
+	unsigned char flagAllAround(std::pair<short, short>& coordinates);
+	bool stepOnAllAround(std::pair<short, short>& coordinates);
+	std::pair<unsigned, unsigned> calculateCountOfUnknownCellsNear(std::pair<short, short>& coordinates);
 	bool isMapPrepaired = false;
 	MapPoint** map;
 	MapSize MatrixMapSizeY;
