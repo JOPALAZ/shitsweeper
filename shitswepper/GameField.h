@@ -29,20 +29,22 @@ public:
 	unsigned getDifficulty();
 	void mute();
 	void hint(sf::RenderWindow* window) {
-		if (!gameMap.mapPrepaired()) { gameMap.leftClickOnMap(0, 0); }
-		if (!gameMap.giveHint() && gameMap.getBombAmount() != 0)
-			std::cout << "NOTHING CAN BE DONE\n";
-		bombAmountString = "BOMBS LEFT: " + std::to_string(gameMap.getBombAmount());
-		if(gameMap.getBombAmount()==0)
-			isWin(window);
+		if (gameIsOn) {
+			if (!gameMap.giveHint() && gameMap.getBombAmount() != 0)
+				std::cout << "NOTHING CAN BE DONE\n";
+			bombAmountString = "BOMBS LEFT: " + std::to_string(gameMap.getBombAmount());
+			if (gameMap.getBombAmount() == 0)
+				isWin(window);
+		}
 	}
 	void superHint(sf::RenderWindow* window) {
-		if (!gameMap.mapPrepaired()) { gameMap.leftClickOnMap(0, 0); }
+		if (gameIsOn) {
 		if (!gameMap.giveSuperHint() && gameMap.getBombAmount() != 0)
 			std::cout << "NOTHING CAN BE DONE\n";
 		bombAmountString = "BOMBS LEFT: " + std::to_string(gameMap.getBombAmount());
 		if (gameMap.getBombAmount() == 0)
 			isWin(window);
+		}
 	}
 	~GameField();
 	bool isWin(sf::RenderWindow* window);
