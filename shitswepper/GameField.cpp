@@ -206,33 +206,8 @@ bool GameField::leftClickOnField(sf::RenderWindow* window)
             gameMap.deleteUnique();
             return false;
         }
-        if (gameMap.checkWinState()) {
-            bombAmountString = "YOU WON";
-            bombAmount.setString(bombAmountString);
-            while (bombAmount.getLocalBounds().width <= WINDOW_RES.first * 0.32f && bombAmount.getLocalBounds().height <= WINDOW_RES.first * MARGIN_SCALE * 0.8f)
-            {
-                charSizeHeight++;
-                bombAmount.setCharacterSize(charSizeHeight);
-            }
-            while (bombAmount.getLocalBounds().width > WINDOW_RES.first * 0.32f || bombAmount.getLocalBounds().height > WINDOW_RES.first * MARGIN_SCALE * 0.8f)
-            {
-                charSizeHeight--;
-                bombAmount.setCharacterSize(charSizeHeight);
-            }
-
-            bombAmount.setOrigin(bombAmount.getLocalBounds().left + bombAmount.getLocalBounds().width / 2.0f,
-                bombAmount.getLocalBounds().top + bombAmount.getLocalBounds().height / 2.0f);
-            bombAmount.setPosition(WINDOW_RES.first * 0.8f, WINDOW_RES.second * MARGIN_SCALE / 2.f);
-            bombAmount.setFillColor(sf::Color(9, 121, 105)); // ZELENIY
-            gameMap.openAllMap();
-            window->clear();
-            drawAllElements(window);
-            window->display();
-            playWinLooseSound(true);
-            gameIsOn = false;
-            gameMap.deleteUnique();
+        if (isWin(window))
             return true;
-        }
         bombAmountString = "BOMBS LEFT: " + std::to_string(gameMap.getBombAmount());
         return true;
     }
@@ -249,6 +224,37 @@ bool GameField::leftClickOnField(sf::RenderWindow* window)
     }
     return false;
 }
+bool GameField::isWin(sf::RenderWindow* window)
+{
+    if (gameMap.checkWinState()) {
+        bombAmountString = "YOU WON";
+        bombAmount.setString(bombAmountString);
+        while (bombAmount.getLocalBounds().width <= WINDOW_RES.first * 0.32f && bombAmount.getLocalBounds().height <= WINDOW_RES.first * MARGIN_SCALE * 0.8f)
+        {
+            charSizeHeight++;
+            bombAmount.setCharacterSize(charSizeHeight);
+        }
+        while (bombAmount.getLocalBounds().width > WINDOW_RES.first * 0.32f || bombAmount.getLocalBounds().height > WINDOW_RES.first * MARGIN_SCALE * 0.8f)
+        {
+            charSizeHeight--;
+            bombAmount.setCharacterSize(charSizeHeight);
+        }
+
+        bombAmount.setOrigin(bombAmount.getLocalBounds().left + bombAmount.getLocalBounds().width / 2.0f,
+            bombAmount.getLocalBounds().top + bombAmount.getLocalBounds().height / 2.0f);
+        bombAmount.setPosition(WINDOW_RES.first * 0.8f, WINDOW_RES.second * MARGIN_SCALE / 2.f);
+        bombAmount.setFillColor(sf::Color(9, 121, 105)); // ZELENIY
+        gameMap.openAllMap();
+        window->clear();
+        drawAllElements(window);
+        window->display();
+        playWinLooseSound(true);
+        gameIsOn = false;
+        gameMap.deleteUnique();
+        return true;
+    }
+}
+
 unsigned GameField::getDifficulty()
 {
     std::ifstream file(path + "\\dif");
@@ -310,6 +316,12 @@ void GameField::drawMenu(sf::RenderWindow* window) {
 void GameField::wait(unsigned msec) {
     sf::sleep(sf::milliseconds(msec)); // гений)
 }
+
+
+
+
+
+
 GameField::~GameField() {
     if (textures != nullptr) {
         for (auto& k : *textures) {
