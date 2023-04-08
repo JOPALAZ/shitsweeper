@@ -51,7 +51,7 @@ void GameMap::prepareMap(MapPosition y_pos, MapPosition x_pos)
 
 		return false;
 	};
-	unsigned char bombPlanted = 0;
+	unsigned short bombPlanted = 0;
 	while (bombAmount_ > bombPlanted) {
 		for (MapSize i{}; i < MatrixMapSizeY; ++i) {
 			if (bombPlanted >= bombAmount_)
