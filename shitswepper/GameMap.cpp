@@ -127,8 +127,8 @@ bool GameMap::checkWinState()
 	return true;
 }
 void GameMap::openCellsNear(MapPosition y, MapPosition x) {
-	map[y][x].step();
 	bombAmount -= map[y][x].unflag();
+	map[y][x].step();
 	if (map[y][x].getNum() == 0) {
 		for (short i{ y - 1 }; i <= y + 1; ++i) {
 			for (short j{ x - 1 }; j <= x + 1; ++j) {
