@@ -20,6 +20,7 @@ public:
 	bool openCell(MapPosition y, MapPosition x);
 	void debugPrint();
 	void debugPrintBool();
+	void checkAllFlags();
 	bool isAllFlagCorrect();
 	bool leftClickOnMap(int x, int y);
 	void rightClickOnMap(int x, int y);
@@ -33,9 +34,13 @@ public:
 	
 private:
 	unsigned char flagAllAround(std::pair<short, short>& coordinates);
-	bool stepOnAllAround(std::pair<short, short>& coordinates);
+	bool isAtLeastOneCellCorrect(SmartArray<std::pair<MapSize, MapSize>>& toCheck);
+	bool isBordering(MapSize& y, MapSize& x);
+	SmartArray<std::pair<MapSize, MapSize>> isNearOpened(std::pair<MapSize, MapSize>& coordinates);
+	bool stepOnAllAround(std::pair<MapSize, MapSize>& coordinates);
 	std::pair<unsigned, unsigned> calculateCountOfUnknownCellsNear(std::pair<short, short>& coordinates);
 	bool isMapPrepaired = false;
+	SmartArray<std::pair<MapSize, MapSize>> sureFlags;
 	MapPoint** map;
 	MapSize MatrixMapSizeY;
 	MapSize MatrixMapSizeX;

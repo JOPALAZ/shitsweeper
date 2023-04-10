@@ -74,6 +74,7 @@ char MapPoint::unflag() {
 	if (flagged) {
 		flagged = false;
 		sure = true;
+		body.setTexture(*textures->at("UNKNOWN"), true);
 		return -1;
 	}
 	flagged = false;
