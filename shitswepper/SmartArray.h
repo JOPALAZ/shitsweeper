@@ -5,6 +5,15 @@ template <class DataType>
 class SmartArray //Ya ne ponyal zachem ya yeho napisal, deque luchshe budet v 100 raz, hotya budet zhrat bolse pamyati no zato slozhnost budet menyshe v 1000 raz vmesto O(n) O(1) ya dumayu.
 {
 public:
+	template<typename T>
+	int find(T& data) {
+		for (unsigned i{}; i < size; ++i) {
+			if (this->data[i] == data) {
+				return i;
+			}
+		}
+		return -1;
+	}				
 	unsigned getSize() const { return size; }
 	SmartArray() { this->data = new DataType[1]; }
 	template<typename T>
@@ -41,12 +50,18 @@ public:
 	}
 	DataType& operator[](const unsigned& u) { return data[u]; }
 	void clear() {
-		delete[] data;
-		data = new DataType[1];
+		if (data) {
+			delete[] data;
+		}
 		capacity = 1;
+		data = new DataType[capacity];
 		size = 0;
 	}
-	~SmartArray() { this->clear(); }
+	~SmartArray() {
+		if (data) {
+			delete[] data;
+		}
+	}
 private:
 	void tsttt(unsigned capacity) {
 
